@@ -28,10 +28,15 @@ export async function updateASN(id, payload) {
 }
 
 export async function deleteASN(id) {
-  const r = await fetch(`/api/asn/${id}`, { method: "DELETE" });
+  const idNum = Number(id);
+  if (!Number.isInteger(idNum) || idNum <= 0) {
+    throw new Error(`deleteASN invalid id: ${id}`); // cegah URL salah
+  }
+  const r = await fetch(`/api/asn/${idNum}`, { method: "DELETE" });
   if (!r.ok) {
     let msg = ""; try { msg = await r.text(); } catch {}
     throw new Error(`deleteASN failed: ${r.status} ${msg}`);
   }
   return true;
 }
+
